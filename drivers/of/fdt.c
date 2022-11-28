@@ -604,6 +604,8 @@ void *initial_boot_params;
 
 static u32 of_fdt_crc32;
 
+void init_param_mem_base_size(phys_addr_t base, unsigned long size);
+
 /*
  * Reserve memory via command line if needed.
  */
@@ -685,6 +687,9 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
 		else
 			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %lu MiB\n",
 				uname, &base, (unsigned long)(size / SZ_1M));
+		
+		if (!strncmp(uname, "param_mem", 9))
+			init_param_mem_base_size(base, size);
 
 		len -= t_len;
 		if (first) {
